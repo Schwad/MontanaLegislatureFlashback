@@ -49,13 +49,11 @@ while true
     bill_year = "1999"
   end
 
-
-###PUT FURTHER SELECTORS HERE
-
     i = 0
     z = 0
-    #DEBUG CODE
-    puts "this is the selector: #{selector}"
+
+#    puts "this is the selector: #{selector}"     #reactivate if needed for debugging
+
   #BILL TITLE SCRAPE
   bills_page.search('a').each do |x|
     if x.text.strip.split('')[0..1].join('') == "HB"
@@ -75,7 +73,7 @@ while true
     end 
   end
 
-    i = 0
+  i = 0
   #BILL NAME SCRAPE
   bills_page.search(':nth-child(6)').each do |value|
         bill_data[i] << value.text.strip
@@ -101,22 +99,16 @@ while true
 
   #everything below is for debugging and testing lengths. delete when done.
 
-  if length_tracker.length > longest_one
-    longest_one = length_tracker.length
-  end
-  puts "longest so far is #{longest_one}"
+#  if length_tracker.length > longest_one
+#    longest_one = length_tracker.length
+ # end
+  #puts "longest so far is #{longest_one}"
   
-  length_avg << length_tracker.length
-  length_sum = length_avg.inject{|sum,x| sum + x}
-  total_avg = length_sum / length_avg.length
-  puts "average is #{total_avg}"
+  #length_avg << length_tracker.length
+  #length_sum = length_avg.inject{|sum,x| sum + x}
+  #total_avg = length_sum / length_avg.length
+  #puts "average is #{total_avg}"
 
 end
 
-    #fromline16  bill_data[value.text.strip] = {} #intialize 
-# TODO: create section for each year to randomly select after done
-#TODO: incorporate link, bill number and title into same array.
-#BULK OUT AND DO TWITTER AUTH
-#LINK SCRAPE
-#BULK OUT PAST SESSIONS
-#TWITTER AUTH
+   
