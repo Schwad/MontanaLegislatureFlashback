@@ -2,6 +2,8 @@ require 'rubygems'
 require 'oauth'
 require 'json'
 require 'mechanize'
+
+
 length_avg = []
 longest_one = 0
 while true 
@@ -93,9 +95,11 @@ while true
 
   tweet_data = bill_data[result]
   
-  length_tracker = "#{tweet_data[0]} (#{bill_year}), an act to #{tweet_data[1]} laws.leg.mt.gov/legprd/#{tweet_data[2]} #pastmtleg"
+ # length_tracker = "#{tweet_data[0]} (#{bill_year}), an act to #{tweet_data[1]} laws.leg.mt.gov/legprd/#{tweet_data[2]} #pastmtleg"
 
-  puts length_tracker
+ # puts length_tracker
+
+
 
   #everything below is for debugging and testing lengths. delete when done.
 
@@ -108,7 +112,48 @@ while true
   #length_sum = length_avg.inject{|sum,x| sum + x}
   #total_avg = length_sum / length_avg.length
   #puts "average is #{total_avg}"
+  #TWITTER CHUNK
 
+
+
+    #Twitter api auths and tokens
+  consumer_key = OAuth::Consumer.new(
+    "-------",
+    "-----------")
+   access_token = OAuth::Token.new(
+    "------------",
+    "----------------")
+
+    baseurl = "https://api.twitter.com"
+    path    = "/1.1/statuses/update.json"
+    address = URI("#{baseurl}#{path}")
+    request = Net::HTTP::Post.new address.request_uri
+
+
+    #Output tweets go here
+    request.set_form_data(
+      "status" => "#{tweet_data[0]} (#{bill_year}), an act to #{tweet_data[1]} #{tweet_data[2]} #pastmtleg",
+          )
+
+    # Set up HTTP.
+    http             = Net::HTTP.new address.host, address.port
+    http.use_ssl     = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
+    # Issue the request.
+    request.oauth! http, consumer_key, access_token
+    http.start
+    response = http.request request
+
+    # Parse and print the Tweet if the response code was 200
+    tweet = nil
+    if response.code == '200' then
+      tweet = JSON.parse(response.body)
+      puts "Successfully sent #{tweet["text"]}"
+    else
+      puts "Could not send the Tweet! " +
+      "Code:#{response.code} Body:#{response.body}"
+    end
 end
 
    
